@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Prediction</title>
+    <style>
+        body {
+            background-image: url('static/images/img.jpg'); /* Background image path */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent repeating */
+            height: 100vh; /* Full height of the viewport */
+            margin: 0; /* Remove default margin */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white; /* Text color for visibility */
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background for readability */
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px; /* Adjust width as needed */
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #28a745; /* Green color */
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Car Price Prediction</h1>
+        <form id="predictionForm">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="Gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="Age" required>
+
+            <label for="annual_salary">Annual Salary:</label>
+            <input type="number" id="annual_salary" name="Annual_Salary" required>
+
+            <label for="credit_card_debt">Credit Card Debt:</label>
+            <input type="number" id="credit_card_debt" name="Credit_Card_Debt" required>
+
+            <label for="net_worth">Net Worth:</label>
+            <input type="number" id="net_worth" name="Net_Worth" required>
+
+            <button type="submit">Predict</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/Prediction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                document.getElementById('result').innerText = result["Prediction of Total amount Customer is willing to pay for new car:"];
+            } catch (error) {
+                document.getElementById('result').innerText = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
